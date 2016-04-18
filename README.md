@@ -11,7 +11,7 @@ This is an easy to use keyboard navigation plugin for aurelia. It is based on th
 ```
 
 5. Configure aurelia-keyboard-navigation
-6. 
+
 ```shell
   import { AKPConfiguration } from 'aurelia-keyboard-plugin';
 

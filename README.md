@@ -6,6 +6,7 @@ This is an easy to use keyboard navigation plugin for aurelia. It is based on th
 2. Install jspm.
 3. Install aurelia
 4. Install aurelia-keyboard-navigation
+
 ```shell
   jspm install github:novatrox/aurelia-keyboard-plugin
 ```

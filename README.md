@@ -9,7 +9,9 @@ This is an easy to use keyboard navigation plugin for aurelia. It is based on th
 ```shell
   jspm install github:novatrox/aurelia-keyboard-plugin
 ```
+
 5. Configure aurelia-keyboard-navigation
+6. 
 ```shell
   import { AKPConfiguration } from 'aurelia-keyboard-plugin';
 
@@ -22,6 +24,7 @@ Possible configuration options are: value(default setting)
 *	defaultPreventInputBubble(false): Should inputs not respond to binding by default
 *	defaultPrevent(false): Should callbacks fire e.preventDefault(); by default
 *	defaultGlobal(true): Should keybinds be global by default
+
 6. You are done. Read the tutorial to learn how to use the plugin
 
 

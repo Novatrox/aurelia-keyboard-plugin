@@ -17,13 +17,13 @@ This is an easy to use keyboard navigation plugin for aurelia. It is based on th
       config.useDefaults();
   });
 ```
-Possible configuration options are:
+Possible configuration options are: value(default setting)
 * preventBubbleClass('akp-nobubble') : Class name to give inputs that should bypass keys bound by plugin
 *	defaultPreventInputBubble(false): Should inputs not respond to binding by default
 *	defaultPrevent(false): Should callbacks fire e.preventDefault(); by default
 *	defaultGlobal(true): Should keybinds be global by default
 6. You are done. Read the tutorial to learn how to use the plugin
-7. 
+
 
 ## Using the plugin
 The plugin exposes a global custom attribute called keybind="", it has several properties to bind to. 

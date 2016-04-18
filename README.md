@@ -1,13 +1,93 @@
 # Aurelia Keyboard Plugin
-This is a plugin to easily manage keyboard binding within an aurelia application.
+This is an easy to use keyboard navigation plugin for aurelia. It is based on the popular mousetrap javascript library.
+
+## Installing the plugin
+1. Ensure that [NodeJS](http://nodejs.org/) and jspm is installed. This provides the platform on which the build tooling runs.
+2. Install jspm.
+3. Install aurelia
+4. Install aurelia-keyboard-navigation
+```shell
+  jspm install github:novatrox/aurelia-keyboard-plugin
+```
+5. Configure aurelia-keyboard-navigation
+```shell
+  import { AKPConfiguration } from 'aurelia-keyboard-plugin';
+
+   aurelia.use.plugin('novatrox/aurelia-keyboard-plugin', (config: AKPConfiguration) => {
+      config.useDefaults();
+  });
+```
+Possible configuration options are:
+* preventBubbleClass('akp-nobubble') : Class name to give inputs that should bypass keys bound by plugin
+*	defaultPreventInputBubble(false): Should inputs not respond to binding by default
+*	defaultPrevent(false): Should callbacks fire e.preventDefault(); by default
+*	defaultGlobal(true): Should keybinds be global by default
+6. You are done. Read the tutorial to learn how to use the plugin
+7. 
+
+## Using the plugin
+The plugin exposes a global custom attribute called keybind="", it has several properties to bind to. 
+* trigger: Which keys should trigger
+* delegate: Callback, when no delegate is defined element.click() is default.
+* prevent: Should call e.preventDefault(); (default false)
+* global: Is global, otherwise will only fire when scope is in focus (inputs) (default true)
+
+
+### Tutorial
+
+*Simple keybind to make enter click your button, because no delegate is given the plugin will fire element.click()*
+```shell
+ <form>
+ <input type="text" value="Something to post"/>
+ <button type="submit" keybind="trigger: enter;">Submit form</submit>
+ </form>
+```
+
+
+*Simple keybind to perform search when in search input scope, because global is set to false it will only trigger when focus is inside the input*
 
 ```shell
-  <form keybind="trigger: enter, delegate.call: submitHandler();">
-  <input type="text" placeholder="Something to post" />
-  <button type="submit">Submit</button>
-  <button keybind="trigger: escape, delegate.call: cancel();">Cancel</button>
-  </form>
+<input type="text" placeholder="Search for something" keybind="trigger: enter; delegate.call: doSearch(); global: false;" />
 ```
+
+*Simple keybind to navigate, when args is defined the plugin passes a KeyboardEvent parameter to the delegate, the parameter must be called args.*
+
+```shell
+**view.html**
+
+<table keybind="trigger: up, down; delegate.call: doNavigation(args);>
+<tbody repeat.for="item of items">
+<tr>
+<td>${item.id}</td>
+<td>Selected: ${item.selected}</td>
+</tr>
+</table>
+
+**view.ts*
+doNavigation(args) {
+    let currentIndex = this.items.map(function (i) {
+            return i.selected;
+    }).indexOf(true);
+    
+    let isDown = args.keyCode === 40;
+    items[currentIndex].selected = false;
+    if (isDown) {
+      items[++currentIndex].selected = true;
+    } else {
+      items[--currentIndex].selected = true;
+    }
+}
+
+```
+
+*Simple keybind to perform save. Prevent is set to true to prevent webbrowser from opening default save dialog.*
+```shell
+ <textarea keybind="trigger: ctrl+s; delegate.call: silentSave(); prevent: true; global:false;"></textarea>
+```
+
+
+
+
 
 
 # Based on aurelia-skeleton-plugin

@@ -194,7 +194,10 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec3 = (0, _aureliaFramework.i
 					if (keyEvent.preventDefault) {
 						e.preventDefault();
 					}
-					keyEvent.callback({ args: e });
+					var res = keyEvent.callback({ args: e });
+					if (res !== undefined && typeof res === 'boolean') {
+						return res;
+					}
 				});
 			})();
 		}
@@ -207,7 +210,10 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec3 = (0, _aureliaFramework.i
 				if (preventDefault) {
 					e.preventDefault();
 				}
-				callback({ args: e });
+				var res = callback({ args: e });
+				if (res !== undefined && typeof res === 'boolean') {
+					return res;
+				}
 			});
 		} else {
 			this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
@@ -215,7 +221,10 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec3 = (0, _aureliaFramework.i
 				if (preventDefault) {
 					e.preventDefault();
 				}
-				callback({ args: e });
+				var res = callback({ args: e });
+				if (res !== undefined && typeof res === 'boolean') {
+					return res;
+				}
 			});
 		}
 	};

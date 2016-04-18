@@ -77,7 +77,10 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 						if (keyEvent.preventDefault) {
 							e.preventDefault();
 						}
-						keyEvent.callback({ args: e });
+						var res = keyEvent.callback({ args: e });
+						if (res !== undefined && typeof res === 'boolean') {
+							return res;
+						}
 					});
 				})();
 			}
@@ -90,7 +93,10 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 					if (preventDefault) {
 						e.preventDefault();
 					}
-					callback({ args: e });
+					var res = callback({ args: e });
+					if (res !== undefined && typeof res === 'boolean') {
+						return res;
+					}
 				});
 			} else {
 				this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
@@ -98,7 +104,10 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 					if (preventDefault) {
 						e.preventDefault();
 					}
-					callback({ args: e });
+					var res = callback({ args: e });
+					if (res !== undefined && typeof res === 'boolean') {
+						return res;
+					}
 				});
 			}
 		};

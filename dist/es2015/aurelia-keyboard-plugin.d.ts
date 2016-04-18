@@ -10,7 +10,7 @@ declare module 'aurelia-keyboard-plugin' {
     DOM
   } from 'aurelia-pal';
   export class AKPConfiguration {
-    settings: akpOptions;
+    settings: any;
     aurelia: any;
     constructor(aurelia: any);
     useDefaults(): AKPConfiguration;

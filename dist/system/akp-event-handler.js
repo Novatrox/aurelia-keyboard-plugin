@@ -64,7 +64,10 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 								if (keyEvent.preventDefault) {
 									e.preventDefault();
 								}
-								keyEvent.callback({ args: e });
+								var res = keyEvent.callback({ args: e });
+								if (res !== undefined && typeof res === 'boolean') {
+									return res;
+								}
 							});
 						})();
 					}
@@ -77,7 +80,10 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 							if (preventDefault) {
 								e.preventDefault();
 							}
-							callback({ args: e });
+							var res = callback({ args: e });
+							if (res !== undefined && typeof res === 'boolean') {
+								return res;
+							}
 						});
 					} else {
 						this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
@@ -85,7 +91,10 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 							if (preventDefault) {
 								e.preventDefault();
 							}
-							callback({ args: e });
+							var res = callback({ args: e });
+							if (res !== undefined && typeof res === 'boolean') {
+								return res;
+							}
 						});
 					}
 				};

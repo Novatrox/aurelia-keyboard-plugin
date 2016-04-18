@@ -1,6 +1,6 @@
 import {akpOptions} from './akp-options';
 export class AKPConfiguration {
-	settings: akpOptions;
+	settings: any;
 	aurelia: any;
 	constructor(aurelia) {
 		this.aurelia = aurelia;

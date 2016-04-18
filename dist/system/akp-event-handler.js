@@ -24,6 +24,7 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 				function AKPEventHandler(dom, config) {
 					_classCallCheck(this, AKPEventHandler);
 
+					this.defaultPreventInputBubble = false;
 					this.registeredKeys = [];
 
 					this.DOM = dom;

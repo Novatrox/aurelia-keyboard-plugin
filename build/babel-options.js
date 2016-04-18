@@ -16,6 +16,13 @@ exports.base = function() {
     plugins: [
       'syntax-flow',
       'transform-decorators-legacy',
+       ['babel-dts-generator', {
+          packageName: paths.packageName,
+          typings: '',
+          suppressModulePath: true,
+          suppressComments: false,
+          memberOutputFilter: /^_.*/
+      }],
       'transform-flow-strip-types'
     ]
   };

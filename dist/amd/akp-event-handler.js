@@ -37,6 +37,7 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 		function AKPEventHandler(dom, config) {
 			_classCallCheck(this, AKPEventHandler);
 
+			this.defaultPreventInputBubble = false;
 			this.registeredKeys = [];
 
 			this.DOM = dom;

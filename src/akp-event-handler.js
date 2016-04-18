@@ -9,7 +9,7 @@ export class AKPEventHandler {
 	DOM: DOM;
 	mouseTrap: Mousetrap;
 	preventBubbleClass: string;
-	defaultPreventInputBubble: false;
+	defaultPreventInputBubble: boolean = false;
 
 	constructor(dom, config) {
 		this.DOM = dom;

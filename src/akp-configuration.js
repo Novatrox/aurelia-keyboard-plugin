@@ -3,8 +3,8 @@ export class AKPConfiguration {
 	settings: akpOptions;
 	aurelia: any;
 	constructor(aurelia) {
-    	this.aurelia = aurelia;
-    	this.settings = akpOptions;
+		this.aurelia = aurelia;
+		this.settings = akpOptions;
   	}
 	  
 	useDefaults() : AKPConfiguration {

@@ -8,6 +8,7 @@ import * as mt from 'mousetrap';
 export let AKPEventHandler = (_dec = inject(DOM, AKPConfiguration), _dec(_class = class AKPEventHandler {
 
 	constructor(dom, config) {
+		this.defaultPreventInputBubble = false;
 		this.registeredKeys = [];
 
 		this.DOM = dom;

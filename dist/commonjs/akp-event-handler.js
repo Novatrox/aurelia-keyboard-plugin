@@ -25,6 +25,7 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 	function AKPEventHandler(dom, config) {
 		_classCallCheck(this, AKPEventHandler);
 
+		this.defaultPreventInputBubble = false;
 		this.registeredKeys = [];
 
 		this.DOM = dom;

@@ -30,6 +30,8 @@ Possible configuration options are: value(default setting)
 
 
 ## Using the plugin
+To understand the trigger combinations. Read more about Mousetrap on [https://craig.is/killing/mice](https://craig.is/killing/mice)
+
 The plugin exposes a global custom attribute called keybind="", it has several properties to bind to. 
 * trigger: Which keys should trigger
 * delegate: Callback, when no delegate is defined element.click() is default.

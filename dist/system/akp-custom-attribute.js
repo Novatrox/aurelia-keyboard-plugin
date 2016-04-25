@@ -1,7 +1,7 @@
 'use strict';
 
 System.register(['aurelia-framework', './akp-event-handler', './akp-configuration'], function (_export, _context) {
-	var customAttribute, inject, bindingMode, bindable, AKPEventHandler, AKPConfiguration, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, AKPCustomAttribute;
+	var customAttribute, inject, bindable, AKPEventHandler, AKPConfiguration, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, AKPCustomAttribute;
 
 	function _initDefineProp(target, property, descriptor, context) {
 		if (!descriptor) return;
@@ -56,7 +56,6 @@ System.register(['aurelia-framework', './akp-event-handler', './akp-configuratio
 		setters: [function (_aureliaFramework) {
 			customAttribute = _aureliaFramework.customAttribute;
 			inject = _aureliaFramework.inject;
-			bindingMode = _aureliaFramework.bindingMode;
 			bindable = _aureliaFramework.bindable;
 		}, function (_akpEventHandler) {
 			AKPEventHandler = _akpEventHandler.AKPEventHandler;
@@ -64,7 +63,7 @@ System.register(['aurelia-framework', './akp-event-handler', './akp-configuratio
 			AKPConfiguration = _akpConfiguration.AKPConfiguration;
 		}],
 		execute: function () {
-			_export('AKPCustomAttribute', AKPCustomAttribute = (_dec = customAttribute('keybind', bindingMode.twoWay), _dec2 = inject(Element, AKPEventHandler, AKPConfiguration), _dec(_class = _dec2(_class = (_class2 = function () {
+			_export('AKPCustomAttribute', AKPCustomAttribute = (_dec = customAttribute('keybind'), _dec2 = inject(Element, AKPEventHandler, AKPConfiguration), _dec(_class = _dec2(_class = (_class2 = function () {
 				function AKPCustomAttribute(element, eventHandler, config) {
 					_classCallCheck(this, AKPCustomAttribute);
 
@@ -82,21 +81,6 @@ System.register(['aurelia-framework', './akp-event-handler', './akp-configuratio
 					this.global = config.settings.defaultGlobal;
 				}
 
-				AKPCustomAttribute.prototype.valueChanged = function valueChanged(newValue) {
-					this.eventHandler.unregisterKey(this.trigger);
-					var self = this;
-					if (!this.delegate) {
-						this.delegate = function () {
-							self.element.click();
-						};
-					}
-					if (this.global === "false") {
-						this.global = false;
-					}
-
-					this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
-				};
-
 				AKPCustomAttribute.prototype.attached = function attached() {
 					var self = this;
 					if (!this.delegate) {
@@ -104,22 +88,40 @@ System.register(['aurelia-framework', './akp-event-handler', './akp-configuratio
 							self.element.click();
 						};
 					}
+
 					if (this.global === "false") {
 						this.global = false;
+					}
+					if (this.global === "true") {
+						this.global = true;
 					}
 
 					if (this.trigger.indexOf(",") !== -1) {
 						var triggers = this.trigger.split(",").map(function (tr) {
 							return tr.trim();
 						});
-						this.trigger = triggers;
+						triggers.forEach(function (trigger) {
+							this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);
+						}, this);
+					} else {
+						this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
 					}
-
-					this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
 				};
 
 				AKPCustomAttribute.prototype.detached = function detached() {
-					this.eventHandler.unregisterKey(this.trigger);
+					if (this.global) {
+
+						if (this.trigger.indexOf(",") !== -1) {
+							var triggers = this.trigger.split(",").map(function (tr) {
+								return tr.trim();
+							});
+							triggers.forEach(function (trigger) {
+								this.eventHandler.unregisterKey(trigger);
+							}, this);
+						} else {
+							this.eventHandler.unregisterKey(this.trigger);
+						}
+					}
 				};
 
 				return AKPCustomAttribute;

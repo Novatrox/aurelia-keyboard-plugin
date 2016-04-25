@@ -78,7 +78,7 @@ var AKPConfiguration = exports.AKPConfiguration = function () {
 	return AKPConfiguration;
 }();
 
-var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramework.customAttribute)('keybind', _aureliaFramework.bindingMode.twoWay), _dec2 = (0, _aureliaFramework.inject)(Element, AKPEventHandler, AKPConfiguration), _dec(_class2 = _dec2(_class2 = (_class3 = function () {
+var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramework.customAttribute)('keybind'), _dec2 = (0, _aureliaFramework.inject)(Element, AKPEventHandler, AKPConfiguration), _dec(_class2 = _dec2(_class2 = (_class3 = function () {
 	function AKPCustomAttribute(element, eventHandler, config) {
 		_classCallCheck(this, AKPCustomAttribute);
 
@@ -96,21 +96,6 @@ var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramew
 		this.global = config.settings.defaultGlobal;
 	}
 
-	AKPCustomAttribute.prototype.valueChanged = function valueChanged(newValue) {
-		this.eventHandler.unregisterKey(this.trigger);
-		var self = this;
-		if (!this.delegate) {
-			this.delegate = function () {
-				self.element.click();
-			};
-		}
-		if (this.global === "false") {
-			this.global = false;
-		}
-
-		this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
-	};
-
 	AKPCustomAttribute.prototype.attached = function attached() {
 		var self = this;
 		if (!this.delegate) {
@@ -118,22 +103,40 @@ var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramew
 				self.element.click();
 			};
 		}
+
 		if (this.global === "false") {
 			this.global = false;
+		}
+		if (this.global === "true") {
+			this.global = true;
 		}
 
 		if (this.trigger.indexOf(",") !== -1) {
 			var triggers = this.trigger.split(",").map(function (tr) {
 				return tr.trim();
 			});
-			this.trigger = triggers;
+			triggers.forEach(function (trigger) {
+				this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);
+			}, this);
+		} else {
+			this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
 		}
-
-		this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
 	};
 
 	AKPCustomAttribute.prototype.detached = function detached() {
-		this.eventHandler.unregisterKey(this.trigger);
+		if (this.global) {
+
+			if (this.trigger.indexOf(",") !== -1) {
+				var triggers = this.trigger.split(",").map(function (tr) {
+					return tr.trim();
+				});
+				triggers.forEach(function (trigger) {
+					this.eventHandler.unregisterKey(trigger);
+				}, this);
+			} else {
+				this.eventHandler.unregisterKey(this.trigger);
+			}
+		}
 	};
 
 	return AKPCustomAttribute;

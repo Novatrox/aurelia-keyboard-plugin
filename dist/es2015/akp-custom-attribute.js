@@ -43,11 +43,11 @@ function _initializerWarningHelper(descriptor, context) {
 	throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-import { customAttribute, inject, bindingMode, bindable } from 'aurelia-framework';
+import { customAttribute, inject, bindable } from 'aurelia-framework';
 import { AKPEventHandler } from './akp-event-handler';
 import { AKPConfiguration } from './akp-configuration';
 
-export let AKPCustomAttribute = (_dec = customAttribute('keybind', bindingMode.twoWay), _dec2 = inject(Element, AKPEventHandler, AKPConfiguration), _dec(_class = _dec2(_class = (_class2 = class AKPCustomAttribute {
+export let AKPCustomAttribute = (_dec = customAttribute('keybind'), _dec2 = inject(Element, AKPEventHandler, AKPConfiguration), _dec(_class = _dec2(_class = (_class2 = class AKPCustomAttribute {
 
 	constructor(element, eventHandler, config) {
 		_initDefineProp(this, 'trigger', _descriptor, this);
@@ -64,21 +64,6 @@ export let AKPCustomAttribute = (_dec = customAttribute('keybind', bindingMode.t
 		this.global = config.settings.defaultGlobal;
 	}
 
-	valueChanged(newValue) {
-		this.eventHandler.unregisterKey(this.trigger);
-		var self = this;
-		if (!this.delegate) {
-			this.delegate = function () {
-				self.element.click();
-			};
-		}
-		if (this.global === "false") {
-			this.global = false;
-		}
-
-		this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
-	}
-
 	attached() {
 		var self = this;
 		if (!this.delegate) {
@@ -86,21 +71,39 @@ export let AKPCustomAttribute = (_dec = customAttribute('keybind', bindingMode.t
 				self.element.click();
 			};
 		}
+
 		if (this.global === "false") {
 			this.global = false;
+		}
+		if (this.global === "true") {
+			this.global = true;
 		}
 
 		if (this.trigger.indexOf(",") !== -1) {
 			let triggers = this.trigger.split(",").map(function (tr) {
 				return tr.trim();
 			});
-			this.trigger = triggers;
+			triggers.forEach(function (trigger) {
+				this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);
+			}, this);
+		} else {
+			this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
 		}
-
-		this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
 	}
 	detached() {
-		this.eventHandler.unregisterKey(this.trigger);
+		if (this.global) {
+
+			if (this.trigger.indexOf(",") !== -1) {
+				let triggers = this.trigger.split(",").map(function (tr) {
+					return tr.trim();
+				});
+				triggers.forEach(function (trigger) {
+					this.eventHandler.unregisterKey(trigger);
+				}, this);
+			} else {
+				this.eventHandler.unregisterKey(this.trigger);
+			}
+		}
 	}
 }, (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'trigger', [bindable], {
 	enumerable: true,

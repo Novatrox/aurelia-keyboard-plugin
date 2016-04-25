@@ -1,5 +1,5 @@
 import * as mt from 'mousetrap';
-import {customAttribute,inject,bindingMode,bindable} from 'aurelia-framework';
+import {customAttribute,inject,bindable} from 'aurelia-framework';
 import {DOM} from 'aurelia-pal';
 
 export class AKPConfiguration {
@@ -16,7 +16,7 @@ export class AKPConfiguration {
 	}
 }
 
-@customAttribute('keybind', bindingMode.twoWay)
+@customAttribute('keybind')
 @inject(Element, AKPEventHandler, AKPConfiguration)
 export class AKPCustomAttribute {
 	element: HTMLElement;
@@ -33,22 +33,7 @@ export class AKPCustomAttribute {
 		this.global = config.settings.defaultGlobal;		
 	}
 	
-	value: string;
-	valueChanged(newValue) {
-		this.eventHandler.unregisterKey(this.trigger);		
-		var self = this;
-		if(!this.delegate) {
-			this.delegate = function() {
-				self.element.click();
-			};
-		} 
-		if(this.global === "false") {
-			this.global = false;
-		}
-		
-		this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);		
-  	}
-	   
+		   
 	attached() {
 		var self = this;
 		if (!this.delegate) {
@@ -56,20 +41,39 @@ export class AKPCustomAttribute {
 				self.element.click();
 			};
 		} 
+		
+		//Problem with aurelia binding sending me strings.
 		if (this.global === "false") {
 			this.global = false;
+		}
+		if(this.global === "true") {
+			this.global = true;
 		}
 		
 		if (this.trigger.indexOf(",") !== -1) {
 			//ARRAY
 			let triggers = this.trigger.split(",").map(function(tr) { return tr.trim();});
-			this.trigger = triggers;			
+			triggers.forEach(function(trigger) {
+				this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);		
+			}, this);
+						
+		} else {				
+			this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);		
 		}
-		
-		this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);		
 	}
 	detached() {
-		this.eventHandler.unregisterKey(this.trigger);		
+		if(this.global) {
+			
+			if (this.trigger.indexOf(",") !== -1) {
+				//ARRAY
+				let triggers = this.trigger.split(",").map(function(tr) { return tr.trim();});
+				triggers.forEach(function(trigger) {
+					this.eventHandler.unregisterKey(trigger);		
+				}, this);								
+			} else {				
+				this.eventHandler.unregisterKey(this.trigger);		
+			}
+		}
 	}
 }
 

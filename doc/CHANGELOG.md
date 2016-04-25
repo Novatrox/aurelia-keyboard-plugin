@@ -1,3 +1,8 @@
+### 0.3.11 (2016-04-25)
+** splitted arrays to individual bindings
+** fixed non global should not unbind since scope is destroyed.
+** removed some old code
+
 ### 0.3.10 (2016-04-18)
 ** fixed bubbling prevention by returning false
 ** code changes

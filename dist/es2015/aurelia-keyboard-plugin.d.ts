@@ -3,7 +3,6 @@ declare module 'aurelia-keyboard-plugin' {
   import {
     customAttribute,
     inject,
-    bindingMode,
     bindable
   } from 'aurelia-framework';
   import {
@@ -23,8 +22,6 @@ declare module 'aurelia-keyboard-plugin' {
     prevent: boolean;
     global: boolean;
     constructor(element: any, eventHandler: any, config: any);
-    value: string;
-    valueChanged(newValue: any): any;
     attached(): any;
     detached(): any;
   }

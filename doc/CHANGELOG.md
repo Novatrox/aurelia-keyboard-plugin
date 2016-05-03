@@ -1,3 +1,7 @@
+### 0.3.12 (2016-05-03)
+** Cleanup 
+** Added new attribute keyblock, prevents all keybinds added above the block in the dom structure.
+
 ### 0.3.11 (2016-04-25)
 ** splitted arrays to individual bindings
 ** fixed non global should not unbind since scope is destroyed.

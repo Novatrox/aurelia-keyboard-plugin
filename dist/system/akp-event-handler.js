@@ -62,6 +62,10 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 							var keyEvent = _this.registeredKeys[lastIndex];
 
 							_this.mouseTrap.bind(keyEvent.trigger, function (e) {
+
+								if (!self.checkBlocks(context)) {
+									return false;
+								}
 								if (keyEvent.preventDefault) {
 									e.preventDefault();
 								}

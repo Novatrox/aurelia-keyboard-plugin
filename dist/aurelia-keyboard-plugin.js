@@ -55,6 +55,10 @@ export class AKPEventHandler {
 			let keyEvent = this.registeredKeys[lastIndex];
 			//reattach old binding
 			this.mouseTrap.bind(keyEvent.trigger, function(e) {
+					
+				if(!self.checkBlocks(context)) {
+					return false;
+				}
 				if (keyEvent.preventDefault) {
 					e.preventDefault();
 				}

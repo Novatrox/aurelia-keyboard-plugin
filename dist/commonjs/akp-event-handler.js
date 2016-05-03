@@ -63,6 +63,10 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 				var keyEvent = _this.registeredKeys[lastIndex];
 
 				_this.mouseTrap.bind(keyEvent.trigger, function (e) {
+
+					if (!self.checkBlocks(context)) {
+						return false;
+					}
 					if (keyEvent.preventDefault) {
 						e.preventDefault();
 					}

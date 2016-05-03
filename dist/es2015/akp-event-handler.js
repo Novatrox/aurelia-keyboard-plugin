@@ -43,6 +43,10 @@ export let AKPEventHandler = (_dec = inject(DOM, AKPConfiguration), _dec(_class 
 			let keyEvent = this.registeredKeys[lastIndex];
 
 			this.mouseTrap.bind(keyEvent.trigger, function (e) {
+
+				if (!self.checkBlocks(context)) {
+					return false;
+				}
 				if (keyEvent.preventDefault) {
 					e.preventDefault();
 				}

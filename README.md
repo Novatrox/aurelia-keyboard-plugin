@@ -8,7 +8,7 @@ This is an easy to use keyboard navigation plugin for aurelia. It is based on th
 4. Install aurelia-keyboard-navigation
 
 ```shell
-  jspm install github:novatrox/aurelia-keyboard-plugin
+  jspm install aurelia-keyboard-plugin
 ```
 
 5. Configure aurelia-keyboard-navigation
@@ -16,7 +16,7 @@ This is an easy to use keyboard navigation plugin for aurelia. It is based on th
 ```shell
   import { AKPConfiguration } from 'aurelia-keyboard-plugin';
 
-   aurelia.use.plugin('novatrox/aurelia-keyboard-plugin', (config: AKPConfiguration) => {
+   aurelia.use.plugin('aurelia-keyboard-plugin', (config: AKPConfiguration) => {
       config.useDefaults();
   });
 ```

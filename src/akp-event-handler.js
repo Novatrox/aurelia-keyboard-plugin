@@ -63,13 +63,18 @@ export class AKPEventHandler {
 			//only trigger inside context
 			let mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function(e) {
-				if (preventDefault) {
-					e.preventDefault();
-				}
+				
 				var res = callback({args: e});
 				if(res !== undefined && typeof res === 'boolean') {
+					if(!res && preventDefault) {						
+						e.preventDefault();
+					}					
 					return res;
+				} else if (preventDefault) {
+					e.preventDefault();
 				}
+				return true;
+				
 			});
 		}  else {
 			this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
@@ -79,14 +84,16 @@ export class AKPEventHandler {
 				if(!self.checkBlocks(context)) {
 					return false;
 				}
-				
-				if (preventDefault) {
-					e.preventDefault();
-				}
 				var res = callback({args: e});
 				if(res !== undefined && typeof res === 'boolean') {
+					if(!res && preventDefault) {						
+						e.preventDefault();
+					}					
 					return res;
+				} else if (preventDefault) {
+					e.preventDefault();
 				}
+				return true;
 			});
 		}
 	}

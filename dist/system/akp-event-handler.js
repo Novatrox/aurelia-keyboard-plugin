@@ -84,13 +84,17 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 					if (triggerContext) {
 						var mouseTrap = new Mousetrap(triggerContext);
 						mouseTrap.bind(key, function (e) {
-							if (preventDefault) {
-								e.preventDefault();
-							}
+
 							var res = callback({ args: e });
 							if (res !== undefined && typeof res === 'boolean') {
+								if (!res && preventDefault) {
+									e.preventDefault();
+								}
 								return res;
+							} else if (preventDefault) {
+								e.preventDefault();
 							}
+							return true;
 						});
 					} else {
 						(function () {
@@ -101,14 +105,16 @@ System.register(['aurelia-framework', 'aurelia-pal', './akp-configuration', 'mou
 								if (!self.checkBlocks(context)) {
 									return false;
 								}
-
-								if (preventDefault) {
-									e.preventDefault();
-								}
 								var res = callback({ args: e });
 								if (res !== undefined && typeof res === 'boolean') {
+									if (!res && preventDefault) {
+										e.preventDefault();
+									}
 									return res;
+								} else if (preventDefault) {
+									e.preventDefault();
 								}
+								return true;
 							});
 						})();
 					}

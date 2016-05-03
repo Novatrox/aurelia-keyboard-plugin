@@ -99,13 +99,17 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 		if (triggerContext) {
 			var mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function (e) {
-				if (preventDefault) {
-					e.preventDefault();
-				}
+
 				var res = callback({ args: e });
 				if (res !== undefined && typeof res === 'boolean') {
+					if (!res && preventDefault) {
+						e.preventDefault();
+					}
 					return res;
+				} else if (preventDefault) {
+					e.preventDefault();
 				}
+				return true;
 			});
 		} else {
 			(function () {
@@ -116,14 +120,16 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 					if (!self.checkBlocks(context)) {
 						return false;
 					}
-
-					if (preventDefault) {
-						e.preventDefault();
-					}
 					var res = callback({ args: e });
 					if (res !== undefined && typeof res === 'boolean') {
+						if (!res && preventDefault) {
+							e.preventDefault();
+						}
 						return res;
+					} else if (preventDefault) {
+						e.preventDefault();
 					}
+					return true;
 				});
 			})();
 		}

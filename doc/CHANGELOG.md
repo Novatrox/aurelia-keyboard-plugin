@@ -1,3 +1,6 @@
+### 0.3.13 (2016-05-03)
+** Added support to return true if you want to not preventDefault() and bubble on. 
+
 ### 0.3.12 (2016-05-03)
 ** Cleanup 
 ** Added new attribute keyblock, prevents all keybinds added above the block in the dom structure.

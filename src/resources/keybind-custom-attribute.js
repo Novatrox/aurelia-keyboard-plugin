@@ -1,6 +1,6 @@
 import {customAttribute, inject, bindable} from 'aurelia-framework';
-import {AKPEventHandler} from './akp-event-handler';
-import {AKPConfiguration} from './akp-configuration';
+import {AKPEventHandler} from '../akp-event-handler';
+import {AKPConfiguration} from '../akp-configuration';
 @customAttribute('keybind')
 @inject(Element, AKPEventHandler, AKPConfiguration)
 export class AKPCustomAttribute {
@@ -39,11 +39,11 @@ export class AKPCustomAttribute {
 			//ARRAY
 			let triggers = this.trigger.split(",").map(function(tr) { return tr.trim();});
 			triggers.forEach(function(trigger) {
-				this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);		
+				this.eventHandler.registerKey(trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);		
 			}, this);
 						
 		} else {				
-			this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);		
+			this.eventHandler.registerKey(this.trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);		
 		}
 	}
 	detached() {

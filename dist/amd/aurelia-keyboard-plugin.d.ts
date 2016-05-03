@@ -1,9 +1,7 @@
 declare module 'aurelia-keyboard-plugin' {
   import * as mt from 'mousetrap';
   import {
-    customAttribute,
-    inject,
-    bindable
+    inject
   } from 'aurelia-framework';
   import {
     DOM
@@ -14,17 +12,6 @@ declare module 'aurelia-keyboard-plugin' {
     constructor(aurelia: any);
     useDefaults(): AKPConfiguration;
   }
-  export class AKPCustomAttribute {
-    element: HTMLElement;
-    eventHandler: AKPEventHandler;
-    trigger: string;
-    delegate: Function;
-    prevent: boolean;
-    global: boolean;
-    constructor(element: any, eventHandler: any, config: any);
-    attached(): any;
-    detached(): any;
-  }
   export class AKPEventHandler {
     DOM: DOM;
     mouseTrap: Mousetrap;
@@ -33,7 +20,11 @@ declare module 'aurelia-keyboard-plugin' {
     constructor(dom: any, config: any);
     unregisterKey(key: any): any;
     registeredKeys: KeyEvent[];
-    registerKey(key: any, callback: any, scope: any, preventDefault: any): any;
+    registerKey(key: any, callback: any, context: Element, triggerContext: Element, preventDefault: any): any;
+    checkBlocks(element: Element): any;
+    blocks: Element[];
+    registerBlock(element: any): any;
+    unregisterBlock(element: any): any;
   }
   export class KeyEvent {
     trigger: string;

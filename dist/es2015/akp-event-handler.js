@@ -10,6 +10,7 @@ export let AKPEventHandler = (_dec = inject(DOM, AKPConfiguration), _dec(_class 
 	constructor(dom, config) {
 		this.defaultPreventInputBubble = false;
 		this.registeredKeys = [];
+		this.blocks = [];
 
 		this.DOM = dom;
 		let mouseTrap = new Mousetrap();
@@ -53,9 +54,9 @@ export let AKPEventHandler = (_dec = inject(DOM, AKPConfiguration), _dec(_class 
 		}
 	}
 
-	registerKey(key, callback, scope, preventDefault) {
-		if (scope) {
-			let mouseTrap = new Mousetrap(scope);
+	registerKey(key, callback, context, triggerContext, preventDefault) {
+		if (triggerContext) {
+			let mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function (e) {
 				if (preventDefault) {
 					e.preventDefault();
@@ -67,7 +68,13 @@ export let AKPEventHandler = (_dec = inject(DOM, AKPConfiguration), _dec(_class 
 			});
 		} else {
 			this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
+			let self = this;
 			this.mouseTrap.bind(key, function (e) {
+
+				if (!self.checkBlocks(context)) {
+					return false;
+				}
+
 				if (preventDefault) {
 					e.preventDefault();
 				}
@@ -76,6 +83,29 @@ export let AKPEventHandler = (_dec = inject(DOM, AKPConfiguration), _dec(_class 
 					return res;
 				}
 			});
+		}
+	}
+
+	checkBlocks(element) {
+		for (var index = 0; index < this.blocks.length; index++) {
+			var blockingElement = this.blocks[index];
+			if (blockingElement == element) {
+				return true;
+			}
+			if (element.contains(blockingElement)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	registerBlock(element) {
+		this.blocks.push(element);
+	}
+
+	unregisterBlock(element) {
+		if (this.blocks.indexOf(element) !== -1) {
+			this.blocks.splice(this.blocks.indexOf(element), 1);
 		}
 	}
 }) || _class);

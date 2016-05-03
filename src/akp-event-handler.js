@@ -19,6 +19,7 @@ export class AKPEventHandler {
 		let self = this;
 		mouseTrap.stopCallback = function(e, element) {
 			//true means stop
+						
 			//Check if default prevent is enabled
 			if (self.defaultPreventInputBubble) {
 				// stop for input, select, and textarea	
@@ -42,6 +43,10 @@ export class AKPEventHandler {
 			let keyEvent = this.registeredKeys[lastIndex];
 			//reattach old binding
 			this.mouseTrap.bind(keyEvent.trigger, function(e) {
+					
+				if(!self.checkBlocks(context)) {
+					return false;
+				}
 				if (keyEvent.preventDefault) {
 					e.preventDefault();
 				}
@@ -53,9 +58,10 @@ export class AKPEventHandler {
 		}
 	}
 	registeredKeys: KeyEvent[] = [];
-	registerKey(key, callback, scope, preventDefault) {
-		if (scope) {
-			let mouseTrap = new Mousetrap(scope);
+	registerKey(key, callback, context: Element, triggerContext: Element, preventDefault) {
+		if (triggerContext) {
+			//only trigger inside context
+			let mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function(e) {
 				if (preventDefault) {
 					e.preventDefault();
@@ -67,7 +73,13 @@ export class AKPEventHandler {
 			});
 		}  else {
 			this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
+			let self = this;
 			this.mouseTrap.bind(key, function(e) {
+				
+				if(!self.checkBlocks(context)) {
+					return false;
+				}
+				
 				if (preventDefault) {
 					e.preventDefault();
 				}
@@ -76,6 +88,30 @@ export class AKPEventHandler {
 					return res;
 				}
 			});
+		}
+	}
+	
+	checkBlocks(element: Element) {
+		for (var index = 0; index < this.blocks.length; index++) {
+			var blockingElement = this.blocks[index];
+			if(blockingElement == element) {
+				return true; //same level, no block needed
+			}
+			if(element.contains(blockingElement)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	blocks: Element[] = [];
+	registerBlock(element) {
+		this.blocks.push(element);
+	}
+	
+	unregisterBlock(element) {
+		if(this.blocks.indexOf(element) !== -1) {
+			this.blocks.splice(this.blocks.indexOf(element), 1);
 		}
 	}
 }

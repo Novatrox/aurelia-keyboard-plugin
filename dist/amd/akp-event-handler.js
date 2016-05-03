@@ -39,6 +39,7 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 
 			this.defaultPreventInputBubble = false;
 			this.registeredKeys = [];
+			this.blocks = [];
 
 			this.DOM = dom;
 			var mouseTrap = new Mousetrap();
@@ -86,9 +87,11 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 			}
 		};
 
-		AKPEventHandler.prototype.registerKey = function registerKey(key, callback, scope, preventDefault) {
-			if (scope) {
-				var mouseTrap = new Mousetrap(scope);
+		AKPEventHandler.prototype.registerKey = function registerKey(key, callback, context, triggerContext, preventDefault) {
+			var _this2 = this;
+
+			if (triggerContext) {
+				var mouseTrap = new Mousetrap(triggerContext);
 				mouseTrap.bind(key, function (e) {
 					if (preventDefault) {
 						e.preventDefault();
@@ -99,16 +102,47 @@ define(['exports', 'aurelia-framework', 'aurelia-pal', './akp-configuration', 'm
 					}
 				});
 			} else {
-				this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
-				this.mouseTrap.bind(key, function (e) {
-					if (preventDefault) {
-						e.preventDefault();
-					}
-					var res = callback({ args: e });
-					if (res !== undefined && typeof res === 'boolean') {
-						return res;
-					}
-				});
+				(function () {
+					_this2.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
+					var self = _this2;
+					_this2.mouseTrap.bind(key, function (e) {
+
+						if (!self.checkBlocks(context)) {
+							return false;
+						}
+
+						if (preventDefault) {
+							e.preventDefault();
+						}
+						var res = callback({ args: e });
+						if (res !== undefined && typeof res === 'boolean') {
+							return res;
+						}
+					});
+				})();
+			}
+		};
+
+		AKPEventHandler.prototype.checkBlocks = function checkBlocks(element) {
+			for (var index = 0; index < this.blocks.length; index++) {
+				var blockingElement = this.blocks[index];
+				if (blockingElement == element) {
+					return true;
+				}
+				if (element.contains(blockingElement)) {
+					return false;
+				}
+			}
+			return true;
+		};
+
+		AKPEventHandler.prototype.registerBlock = function registerBlock(element) {
+			this.blocks.push(element);
+		};
+
+		AKPEventHandler.prototype.unregisterBlock = function unregisterBlock(element) {
+			if (this.blocks.indexOf(element) !== -1) {
+				this.blocks.splice(this.blocks.indexOf(element), 1);
 			}
 		};
 

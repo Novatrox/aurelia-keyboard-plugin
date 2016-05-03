@@ -1,5 +1,5 @@
 import * as mt from 'mousetrap';
-import {customAttribute,inject,bindable} from 'aurelia-framework';
+import {inject} from 'aurelia-framework';
 import {DOM} from 'aurelia-pal';
 
 export class AKPConfiguration {
@@ -13,67 +13,6 @@ export class AKPConfiguration {
 	useDefaults() : AKPConfiguration {
 		 this.settings = Object.assign(this.settings, akpOptions);
 		 return this;
-	}
-}
-
-@customAttribute('keybind')
-@inject(Element, AKPEventHandler, AKPConfiguration)
-export class AKPCustomAttribute {
-	element: HTMLElement;
-	eventHandler: AKPEventHandler;	
-	@bindable trigger: string;
-	@bindable delegate: Function;
-	@bindable prevent: boolean;
-	@bindable global: boolean;	
-	
-	constructor(element, eventHandler, config) {
-		this.element = element;
-		this.eventHandler = eventHandler;
-		this.prevent = config.settings.defaultPrevent;
-		this.global = config.settings.defaultGlobal;		
-	}
-	
-		   
-	attached() {
-		var self = this;
-		if (!this.delegate) {
-			this.delegate = function() {
-				self.element.click();
-			};
-		} 
-		
-		//Problem with aurelia binding sending me strings.
-		if (this.global === "false") {
-			this.global = false;
-		}
-		if(this.global === "true") {
-			this.global = true;
-		}
-		
-		if (this.trigger.indexOf(",") !== -1) {
-			//ARRAY
-			let triggers = this.trigger.split(",").map(function(tr) { return tr.trim();});
-			triggers.forEach(function(trigger) {
-				this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);		
-			}, this);
-						
-		} else {				
-			this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);		
-		}
-	}
-	detached() {
-		if(this.global) {
-			
-			if (this.trigger.indexOf(",") !== -1) {
-				//ARRAY
-				let triggers = this.trigger.split(",").map(function(tr) { return tr.trim();});
-				triggers.forEach(function(trigger) {
-					this.eventHandler.unregisterKey(trigger);		
-				}, this);								
-			} else {				
-				this.eventHandler.unregisterKey(this.trigger);		
-			}
-		}
 	}
 }
 
@@ -92,6 +31,7 @@ export class AKPEventHandler {
 		let self = this;
 		mouseTrap.stopCallback = function(e, element) {
 			//true means stop
+						
 			//Check if default prevent is enabled
 			if (self.defaultPreventInputBubble) {
 				// stop for input, select, and textarea	
@@ -126,9 +66,10 @@ export class AKPEventHandler {
 		}
 	}
 	registeredKeys: KeyEvent[] = [];
-	registerKey(key, callback, scope, preventDefault) {
-		if (scope) {
-			let mouseTrap = new Mousetrap(scope);
+	registerKey(key, callback, context: Element, triggerContext: Element, preventDefault) {
+		if (triggerContext) {
+			//only trigger inside context
+			let mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function(e) {
 				if (preventDefault) {
 					e.preventDefault();
@@ -140,7 +81,13 @@ export class AKPEventHandler {
 			});
 		}  else {
 			this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
+			let self = this;
 			this.mouseTrap.bind(key, function(e) {
+				
+				if(!self.checkBlocks(context)) {
+					return false;
+				}
+				
 				if (preventDefault) {
 					e.preventDefault();
 				}
@@ -149,6 +96,30 @@ export class AKPEventHandler {
 					return res;
 				}
 			});
+		}
+	}
+	
+	checkBlocks(element: Element) {
+		for (var index = 0; index < this.blocks.length; index++) {
+			var blockingElement = this.blocks[index];
+			if(blockingElement == element) {
+				return true; //same level, no block needed
+			}
+			if(element.contains(blockingElement)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	blocks: Element[] = [];
+	registerBlock(element) {
+		this.blocks.push(element);
+	}
+	
+	unregisterBlock(element) {
+		if(this.blocks.indexOf(element) !== -1) {
+			this.blocks.splice(this.blocks.indexOf(element), 1);
 		}
 	}
 }

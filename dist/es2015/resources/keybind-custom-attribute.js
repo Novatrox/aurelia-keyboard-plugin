@@ -1,17 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.AKPCustomAttribute = undefined;
-
 var _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4;
-
-var _aureliaFramework = require('aurelia-framework');
-
-var _akpEventHandler = require('./akp-event-handler');
-
-var _akpConfiguration = require('./akp-configuration');
 
 function _initDefineProp(target, property, descriptor, context) {
 	if (!descriptor) return;
@@ -22,8 +9,6 @@ function _initDefineProp(target, property, descriptor, context) {
 		value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
 	});
 }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
 	var desc = {};
@@ -58,10 +43,13 @@ function _initializerWarningHelper(descriptor, context) {
 	throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramework.customAttribute)('keybind'), _dec2 = (0, _aureliaFramework.inject)(Element, _akpEventHandler.AKPEventHandler, _akpConfiguration.AKPConfiguration), _dec(_class = _dec2(_class = (_class2 = function () {
-	function AKPCustomAttribute(element, eventHandler, config) {
-		_classCallCheck(this, AKPCustomAttribute);
+import { customAttribute, inject, bindable } from 'aurelia-framework';
+import { AKPEventHandler } from '../akp-event-handler';
+import { AKPConfiguration } from '../akp-configuration';
 
+export let AKPCustomAttribute = (_dec = customAttribute('keybind'), _dec2 = inject(Element, AKPEventHandler, AKPConfiguration), _dec(_class = _dec2(_class = (_class2 = class AKPCustomAttribute {
+
+	constructor(element, eventHandler, config) {
 		_initDefineProp(this, 'trigger', _descriptor, this);
 
 		_initDefineProp(this, 'delegate', _descriptor2, this);
@@ -76,7 +64,7 @@ var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramew
 		this.global = config.settings.defaultGlobal;
 	}
 
-	AKPCustomAttribute.prototype.attached = function attached() {
+	attached() {
 		var self = this;
 		if (!this.delegate) {
 			this.delegate = function () {
@@ -92,22 +80,21 @@ var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramew
 		}
 
 		if (this.trigger.indexOf(",") !== -1) {
-			var triggers = this.trigger.split(",").map(function (tr) {
+			let triggers = this.trigger.split(",").map(function (tr) {
 				return tr.trim();
 			});
 			triggers.forEach(function (trigger) {
-				this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);
+				this.eventHandler.registerKey(trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);
 			}, this);
 		} else {
-			this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
+			this.eventHandler.registerKey(this.trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);
 		}
-	};
-
-	AKPCustomAttribute.prototype.detached = function detached() {
+	}
+	detached() {
 		if (this.global) {
 
 			if (this.trigger.indexOf(",") !== -1) {
-				var triggers = this.trigger.split(",").map(function (tr) {
+				let triggers = this.trigger.split(",").map(function (tr) {
 					return tr.trim();
 				});
 				triggers.forEach(function (trigger) {
@@ -117,19 +104,17 @@ var AKPCustomAttribute = exports.AKPCustomAttribute = (_dec = (0, _aureliaFramew
 				this.eventHandler.unregisterKey(this.trigger);
 			}
 		}
-	};
-
-	return AKPCustomAttribute;
-}(), (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'trigger', [_aureliaFramework.bindable], {
+	}
+}, (_descriptor = _applyDecoratedDescriptor(_class2.prototype, 'trigger', [bindable], {
 	enumerable: true,
 	initializer: null
-}), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'delegate', [_aureliaFramework.bindable], {
+}), _descriptor2 = _applyDecoratedDescriptor(_class2.prototype, 'delegate', [bindable], {
 	enumerable: true,
 	initializer: null
-}), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'prevent', [_aureliaFramework.bindable], {
+}), _descriptor3 = _applyDecoratedDescriptor(_class2.prototype, 'prevent', [bindable], {
 	enumerable: true,
 	initializer: null
-}), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'global', [_aureliaFramework.bindable], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class2.prototype, 'global', [bindable], {
 	enumerable: true,
 	initializer: null
 })), _class2)) || _class) || _class);

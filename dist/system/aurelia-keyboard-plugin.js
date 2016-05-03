@@ -12,7 +12,9 @@ System.register(['./akp-configuration'], function (_export, _context) {
     }],
     execute: function () {
       function configure(aurelia, callback) {
-        aurelia.globalResources('./akp-custom-attribute');
+        aurelia.globalResources('./resources/keybind-custom-attribute');
+        aurelia.globalResources('./resources/keyblock-custom-attribute');
+
         var config = new AKPConfiguration(aurelia);
         if (callback !== undefined && typeof callback === 'function') {
           callback(config);

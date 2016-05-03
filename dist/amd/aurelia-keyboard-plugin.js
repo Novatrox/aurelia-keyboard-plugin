@@ -13,7 +13,9 @@ define(['exports', './akp-configuration'], function (exports, _akpConfiguration)
     }
   });
   function configure(aurelia, callback) {
-    aurelia.globalResources('./akp-custom-attribute');
+    aurelia.globalResources('./resources/keybind-custom-attribute');
+    aurelia.globalResources('./resources/keyblock-custom-attribute');
+
     var config = new _akpConfiguration.AKPConfiguration(aurelia);
     if (callback !== undefined && typeof callback === 'function') {
       callback(config);

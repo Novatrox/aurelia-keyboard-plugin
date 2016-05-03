@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-framework', './akp-event-handler', './akp-configuration'], function (exports, _aureliaFramework, _akpEventHandler, _akpConfiguration) {
+define(['exports', 'aurelia-framework', '../akp-event-handler', '../akp-configuration'], function (exports, _aureliaFramework, _akpEventHandler, _akpConfiguration) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -95,10 +95,10 @@ define(['exports', 'aurelia-framework', './akp-event-handler', './akp-configurat
 					return tr.trim();
 				});
 				triggers.forEach(function (trigger) {
-					this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);
+					this.eventHandler.registerKey(trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);
 				}, this);
 			} else {
-				this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
+				this.eventHandler.registerKey(this.trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);
 			}
 		};
 

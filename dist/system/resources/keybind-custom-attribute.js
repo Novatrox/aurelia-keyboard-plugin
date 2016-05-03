@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['aurelia-framework', './akp-event-handler', './akp-configuration'], function (_export, _context) {
+System.register(['aurelia-framework', '../akp-event-handler', '../akp-configuration'], function (_export, _context) {
 	var customAttribute, inject, bindable, AKPEventHandler, AKPConfiguration, _dec, _dec2, _class, _desc, _value, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, AKPCustomAttribute;
 
 	function _initDefineProp(target, property, descriptor, context) {
@@ -101,10 +101,10 @@ System.register(['aurelia-framework', './akp-event-handler', './akp-configuratio
 							return tr.trim();
 						});
 						triggers.forEach(function (trigger) {
-							this.eventHandler.registerKey(trigger, this.delegate, this.global ? null : this.element, this.prevent);
+							this.eventHandler.registerKey(trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);
 						}, this);
 					} else {
-						this.eventHandler.registerKey(this.trigger, this.delegate, this.global ? null : this.element, this.prevent);
+						this.eventHandler.registerKey(this.trigger, this.delegate, this.element, this.global ? null : this.element, this.prevent);
 					}
 				};
 

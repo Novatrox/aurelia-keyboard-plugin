@@ -21,6 +21,7 @@ declare module 'aurelia-keyboard-plugin' {
     unregisterKey(key: any): any;
     registeredKeys: KeyEvent[];
     registerKey(key: any, callback: any, context: Element, triggerContext: Element, preventDefault: any): any;
+    mouseTrapTriggered(e: any, context: any, callback: any, preventDefault: any): any;
     checkBlocks(element: Element): any;
     blocks: Element[];
     registerBlock(element: any): any;
@@ -30,7 +31,8 @@ declare module 'aurelia-keyboard-plugin' {
     trigger: string;
     callback: Function;
     preventDefault: boolean;
-    constructor(trigger: any, callback: any, preventDefault: any);
+    context: Element;
+    constructor(trigger: any, context: any, callback: any, preventDefault: any);
   }
   export let akpOptions: any;
 }

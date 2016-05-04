@@ -64,6 +64,8 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 	AKPEventHandler.prototype.unregisterKey = function unregisterKey(key) {
 		var _this = this;
 
+		var self = this;
+
 		var lastIndex = this.registeredKeys.map(function (key) {
 			return key.trigger;
 		}).lastIndexOf(key);
@@ -77,62 +79,42 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 				var keyEvent = _this.registeredKeys[lastIndex];
 
 				_this.mouseTrap.bind(keyEvent.trigger, function (e) {
-
-					if (!self.checkBlocks(context)) {
-						return false;
-					}
-					if (keyEvent.preventDefault) {
-						e.preventDefault();
-					}
-					var res = keyEvent.callback({ args: e });
-					if (res !== undefined && typeof res === 'boolean') {
-						return res;
-					}
+					return self.mouseTrapTriggered(e, keyEvent.context, keyEvent.callback, keyEvent.preventDefault);
 				});
 			})();
 		}
 	};
 
 	AKPEventHandler.prototype.registerKey = function registerKey(key, callback, context, triggerContext, preventDefault) {
-		var _this2 = this;
+		var self = this;
 
 		if (triggerContext) {
 			var mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function (e) {
-
-				var res = callback({ args: e });
-				if (res !== undefined && typeof res === 'boolean') {
-					if (!res && preventDefault) {
-						e.preventDefault();
-					}
-					return res;
-				} else if (preventDefault) {
-					e.preventDefault();
-				}
-				return true;
+				return self.mouseTrapTriggered(e, context, callback, preventDefault);
 			});
 		} else {
-			(function () {
-				_this2.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
-				var self = _this2;
-				_this2.mouseTrap.bind(key, function (e) {
-
-					if (!self.checkBlocks(context)) {
-						return false;
-					}
-					var res = callback({ args: e });
-					if (res !== undefined && typeof res === 'boolean') {
-						if (!res && preventDefault) {
-							e.preventDefault();
-						}
-						return res;
-					} else if (preventDefault) {
-						e.preventDefault();
-					}
-					return true;
-				});
-			})();
+			this.registeredKeys.push(new KeyEvent(key, context, callback, preventDefault));
+			this.mouseTrap.bind(key, function (e) {
+				return self.mouseTrapTriggered(e, context, callback, preventDefault);
+			});
 		}
+	};
+
+	AKPEventHandler.prototype.mouseTrapTriggered = function mouseTrapTriggered(e, context, callback, preventDefault) {
+		if (!this.checkBlocks(context)) {
+			return false;
+		}
+		var res = callback({ args: e });
+		if (res !== undefined && typeof res === 'boolean') {
+			if (!res && preventDefault) {
+				e.preventDefault();
+			}
+			return res;
+		} else if (preventDefault) {
+			e.preventDefault();
+		}
+		return true;
 	};
 
 	AKPEventHandler.prototype.checkBlocks = function checkBlocks(element) {
@@ -161,12 +143,13 @@ var AKPEventHandler = exports.AKPEventHandler = (_dec = (0, _aureliaFramework.in
 	return AKPEventHandler;
 }()) || _class2);
 
-var KeyEvent = exports.KeyEvent = function KeyEvent(trigger, callback, preventDefault) {
+var KeyEvent = exports.KeyEvent = function KeyEvent(trigger, context, callback, preventDefault) {
 	_classCallCheck(this, KeyEvent);
 
 	this.trigger = trigger;
 	this.callback = callback;
 	this.preventDefault = preventDefault;
+	this.context = context;
 };
 
 var akpOptions = exports.akpOptions = {

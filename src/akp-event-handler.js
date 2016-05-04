@@ -35,6 +35,8 @@ export class AKPEventHandler {
 	}
 
 	unregisterKey(key) {
+		let self = this;
+		
 		let lastIndex = this.registeredKeys.map(function(key) { return key.trigger; }).lastIndexOf(key);
 		this.registeredKeys.splice(lastIndex, 1);
 		this.mouseTrap.unbind(key);
@@ -42,60 +44,43 @@ export class AKPEventHandler {
 		if (lastIndex !== -1) {
 			let keyEvent = this.registeredKeys[lastIndex];
 			//reattach old binding
-			this.mouseTrap.bind(keyEvent.trigger, function(e) {
-					
-				if(!self.checkBlocks(context)) {
-					return false;
-				}
-				if (keyEvent.preventDefault) {
-					e.preventDefault();
-				}
-				var res = keyEvent.callback({args: e});
-				if(res !== undefined && typeof res === 'boolean') {
-					return res;
-				}
+			this.mouseTrap.bind(keyEvent.trigger,  function(e) {
+				return self.mouseTrapTriggered(e, keyEvent.context, keyEvent.callback, keyEvent.preventDefault);
 			});
 		}
 	}
 	registeredKeys: KeyEvent[] = [];
 	registerKey(key, callback, context: Element, triggerContext: Element, preventDefault) {
+		let self = this;
+		
 		if (triggerContext) {
 			//only trigger inside context
 			let mouseTrap = new Mousetrap(triggerContext);
 			mouseTrap.bind(key, function(e) {
-				
-				var res = callback({args: e});
-				if(res !== undefined && typeof res === 'boolean') {
-					if(!res && preventDefault) {						
-						e.preventDefault();
-					}					
-					return res;
-				} else if (preventDefault) {
-					e.preventDefault();
-				}
-				return true;
-				
+				return self.mouseTrapTriggered(e, context, callback, preventDefault);
 			});
 		}  else {
-			this.registeredKeys.push(new KeyEvent(key, callback, preventDefault));
-			let self = this;
+			this.registeredKeys.push(new KeyEvent(key, context, callback, preventDefault));
 			this.mouseTrap.bind(key, function(e) {
-				
-				if(!self.checkBlocks(context)) {
-					return false;
-				}
-				var res = callback({args: e});
-				if(res !== undefined && typeof res === 'boolean') {
-					if(!res && preventDefault) {						
-						e.preventDefault();
-					}					
-					return res;
-				} else if (preventDefault) {
-					e.preventDefault();
-				}
-				return true;
+				return self.mouseTrapTriggered(e, context, callback, preventDefault);
 			});
 		}
+	}
+	
+	mouseTrapTriggered(e, context, callback, preventDefault) {
+		if(!this.checkBlocks(context)) {
+			return false;
+		}
+		var res = callback({args: e});
+		if(res !== undefined && typeof res === 'boolean') {
+			if(!res && preventDefault) {						
+				e.preventDefault();
+			}					
+			return res;
+		} else if (preventDefault) {
+			e.preventDefault();
+		}
+		return true;
 	}
 	
 	checkBlocks(element: Element) {
@@ -127,9 +112,11 @@ export class KeyEvent {
 	trigger: string;
 	callback: Function;
 	preventDefault: boolean;
-	constructor(trigger, callback, preventDefault) {
+	context: Element;
+	constructor(trigger, context, callback, preventDefault) {
 		this.trigger = trigger;
 		this.callback = callback;
 		this.preventDefault = preventDefault;
+		this.context = context;
 	}
 }

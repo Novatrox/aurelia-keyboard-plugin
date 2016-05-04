@@ -1,3 +1,6 @@
+### 0.3.14 (2016-05-04)
+** Better scope support and more cleanup
+
 ### 0.3.13 (2016-05-03)
 ** Added support to return true if you want to not preventDefault() and bubble on. 
 
